@@ -28,7 +28,7 @@ const Textarea = forwardRef(
     useLayoutEffect(() => setIsRerendered(true), []);
 
     const styles = clsx({
-      "border border-gray-400 focus:border-black  px-2 py-1 focus:outline-none transition resize-none":
+      "border border-gray-400 focus:border-black px-1 focus:outline-none transition resize-none":
         true,
       [`${className}`]: true,
     });

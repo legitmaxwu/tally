@@ -19,8 +19,9 @@ function CreatePage() {
   const router = useRouter();
 
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
-  const { mutate } = useMutation(postQuestion, {
+  const { mutate, isLoading } = useMutation(postQuestion, {
     onError: (error: any) => {
       toast.error(error.message);
     },
@@ -35,16 +36,30 @@ function CreatePage() {
       <div className="h-8"></div>
       <div className="w-96 max-w-full">
         <div className="mb-1">Title</div>
-        <Textarea minRows={1} className="w-full" onValueChange={setTitle} />
+        <Input
+          className="w-full"
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+          value={title}
+        />
+        <div className="h-4"></div>
+        <div className="mb-1">Description</div>
+        <Textarea
+          className="w-full"
+          onValueChange={setDescription}
+          value={description}
+        />
       </div>
       <div className="h-8"></div>
 
       <Button
+        loading={isLoading}
         className="mx-auto"
         onClick={() => {
           mutate({
             title,
-            descriptionHtml: "",
+            description,
           });
         }}
       >

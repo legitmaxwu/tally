@@ -143,12 +143,11 @@ function QuestionPage() {
       toast.error(error.message);
     },
     onSuccess: async (doc) => {
+      setNewAnswer("");
+      setShowSubmit(false);
       localStorage.setItem(`hasUpvoted-${doc.id}`, "true");
       localStorage.setItem(`posted-${doc.id}`, "true");
       toast.success("Answer submitted");
-
-      setNewAnswer("");
-      setShowSubmit(false);
     },
   });
 
@@ -175,6 +174,14 @@ function QuestionPage() {
     <div className="w-160 max-w-full">
       <div className="h-16"></div>
       <div className="font-bold text-center text-3xl">{tally?.title}</div>
+      {tally?.description && (
+        <>
+          <div className="h-2"></div>
+          <div className="text-center text-md whitespace-pre-line text-slate-700">
+            {tally.description}
+          </div>
+        </>
+      )}
       <div className="h-8"></div>
 
       {showSubmit ? (

@@ -1,6 +1,6 @@
 export type Question = {
   title: string;
-  descriptionHtml: string;
+  description: string;
 };
 
 export type Answer = {
