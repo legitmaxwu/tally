@@ -185,7 +185,7 @@ function QuestionPage() {
       <div className="h-8"></div>
 
       {showSubmit ? (
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col items-start gap-2 w-full">
           <button
             onClick={() => {
               setShowSubmit(false);
@@ -200,7 +200,9 @@ function QuestionPage() {
             value={newAnswer}
             onValueChange={setNewAnswer}
           />
-          <Button onClick={handleSubmitAnswer}>Submit</Button>
+          <Button onClick={handleSubmitAnswer} className="flex-0">
+            Submit
+          </Button>
         </div>
       ) : (
         <button
