@@ -1,11 +1,16 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, formatRelative } from "date-fns";
 import { ChevronUpIcon, DocumentIcon } from "@heroicons/react/solid";
-import { DocumentAddIcon, MinusIcon } from "@heroicons/react/outline";
+import {
+  DocumentAddIcon,
+  MinusIcon,
+  TrashIcon,
+} from "@heroicons/react/outline";
 
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -60,6 +65,10 @@ function SelectSortMode(props: SelectSortModeProps) {
       </button>
     </div>
   );
+}
+
+async function deleteAnswer(answerId: string) {
+  return deleteDoc(doc(db, "answers", answerId));
 }
 
 async function toggleUpvote(answerId: string, currentUpvotes: number) {
@@ -163,7 +172,7 @@ function QuestionPage() {
   const [showSubmit, setShowSubmit] = useState(false);
 
   return (
-    <div className="w-120 max-w-full">
+    <div className="w-160 max-w-full">
       <div className="h-16"></div>
       <div className="font-bold text-center text-3xl">{tally?.title}</div>
       <div className="h-8"></div>
@@ -214,45 +223,60 @@ function QuestionPage() {
             localStorage.getItem(`posted-${answer.id}`) === "true";
 
           const upvoteStyles = clsx({
-            "bg-slate-100 self-stretch flex flex-col items-center font-bold pt-5":
+            "bg-slate-100 self-stretch flex flex-col items-center font-bold pt-2":
               true,
-            "text-green-400": hasUpvoted,
+            "text-blue-400": hasUpvoted,
             "text-slate-400": !hasUpvoted,
           });
 
           const arrowStyles = clsx({
             "h-8 w-8 p-2 -m-2 cursor-pointer transition": true,
-            "hover:text-green-300": hasUpvoted,
+            "hover:text-blue-300": hasUpvoted,
             "hover:text-slate-300": !hasUpvoted,
           });
 
           return (
-            <div
-              key={idx}
-              className="flex items-center shadow-sm border border-slate-200"
-            >
-              <div className={upvoteStyles}>
-                <ChevronUpIcon
+            <div key={idx} className="flex">
+              <div className="flex shadow-sm border border-slate-200 w-full">
+                <div className={upvoteStyles}>
+                  <ChevronUpIcon
+                    onClick={() => {
+                      toggleUpvote(answer.id, answer.upvotes);
+                    }}
+                    className={arrowStyles}
+                  />
+                  <div className="select-none">{answer.upvotes}</div>
+                  <div className="h-4 w-4 mx-2 pointer-events-none"></div>
+                </div>
+
+                <div className="px-4 py-2">
+                  <div className="whitespace-pre-line text-sm text-slate-800">
+                    {answer.text}
+                  </div>
+                  <div className="h-1"></div>
+
+                  <div className="text-xs text-gray-400">
+                    {formatRelative(new Date(answer.timestamp), new Date())}
+                    {/* {format(new Date(answer.timestamp), "MMM dd, yyyy h:mm a")} */}
+                  </div>
+                </div>
+              </div>
+
+              {isPoster ? (
+                <TrashIcon
                   onClick={() => {
-                    toggleUpvote(answer.id, answer.upvotes);
+                    const res = window.confirm(
+                      "Are you sure you want to delete this answer?"
+                    );
+                    if (res) {
+                      deleteAnswer(answer.id);
+                    }
                   }}
-                  className={arrowStyles}
+                  className="shrink-0 w-5 h-5 mt-1.5 ml-1 -mr-1 flex flex-col text-gray-300 cursor-pointer transition hover:text-red-600 "
                 />
-                <div className="select-none">{answer.upvotes}</div>
-                <div className="h-4 w-4 mx-2 pointer-events-none"></div>
-              </div>
-
-              <div className="p-4">
-                <div className="whitespace-pre-line text-sm text-slate-800">
-                  {answer.text}
-                </div>
-                <div className="h-2"></div>
-
-                <div className="text-xs text-gray-400">
-                  {formatRelative(new Date(answer.timestamp), new Date())}
-                  {/* {format(new Date(answer.timestamp), "MMM dd, yyyy h:mm a")} */}
-                </div>
-              </div>
+              ) : (
+                <div className="shrink-0 w-5"></div>
+              )}
             </div>
           );
         })}
