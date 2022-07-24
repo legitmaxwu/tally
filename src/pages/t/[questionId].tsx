@@ -188,7 +188,7 @@ function QuestionPage() {
             - Hide
           </button>
           <Textarea
-            placeholder="Enter response here..."
+            placeholder="Type here..."
             className="w-full shrink-0"
             value={newAnswer}
             onValueChange={setNewAnswer}
@@ -202,7 +202,7 @@ function QuestionPage() {
           }}
           className="text-sm text-center flex gap-1 items-center text-slate-600 font-semibold hover:underline"
         >
-          + Submit a response
+          + Post
         </button>
       )}
 
